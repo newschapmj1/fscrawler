@@ -51,7 +51,7 @@
                         </goals>
                         <configuration>
                             <excludes>
-                                <exclude>**/fr/pilato/elasticsearch/crawler/fs/crawlers/ssh/SshDocParserTest.class</exclude>
+                                <exclude>fr/pilato/elasticsearch/crawler/fs/crawlers/ssh/SshDocParserTest.class</exclude>
                             </excludes>
                         </configuration>
                     </execution>
