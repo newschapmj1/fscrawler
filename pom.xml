@@ -892,6 +892,12 @@
                 <artifactId>nginx</artifactId>
                 <version>${testcontainers.version}</version>
             </dependency>
+            <!-- This is needed to align testcontainers with its dependencies -->
+            <dependency>
+                <groupId>com.github.docker-java</groupId>
+                <artifactId>docker-java-transport-httpclient5</artifactId>
+                <version>3.4.1</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
