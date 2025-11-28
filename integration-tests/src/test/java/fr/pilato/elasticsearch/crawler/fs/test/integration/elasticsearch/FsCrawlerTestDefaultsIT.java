@@ -36,14 +36,27 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * Test crawler default settings
+ * <p>
+ * This integration test ensures that the crawler behaves as expected when running with default configuration.
+ * It spins up a crawler, indexes documents, and checks the results in Elasticsearch.
+ * <p>
+ * For new contributors:
+ * <ul>
+ *   <li>This class extends {@link AbstractFsCrawlerITCase} which provides the testing infrastructure.</li>
+ *   <li>Tests typically start the crawler, wait for indexing to complete, and then assert on the content in Elasticsearch.</li>
+ * </ul>
  */
 public class FsCrawlerTestDefaultsIT extends AbstractFsCrawlerITCase {
 
     @Test
     public void defaults() throws Exception {
+        // Start the crawler with default settings.
+        // This will index files from the test resource directory into Elasticsearch.
         crawler = startCrawler();
 
-        // We expect to have one file
+        // We expect to have one file indexed.
+        // countTestHelper is a utility that waits (polls) until the expected number of documents are found
+        // or a timeout occurs. This handles the asynchronous nature of Elasticsearch indexing.
         ESSearchResponse searchResponse = countTestHelper(new ESSearchRequest().withIndex(getCrawlerName()), 1L, null);
 
         // The default configuration should not add file attributes

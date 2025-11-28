@@ -54,6 +54,13 @@ import static org.assertj.core.api.Assumptions.assumeThatCode;
  * <p>
  * These tests do NOT involve Elasticsearch. They are focused on the "Transform" part of the crawler.
  * Test documents are located in the {@code test-documents} module.
+ * <p>
+ * <strong>For new developers:</strong>
+ * <ul>
+ *   <li>This test suite checks how different file formats (PDF, DOC, HTML, etc.) are parsed.</li>
+ *   <li>It verifies the extracted content, metadata (author, date, etc.), and raw metadata maps.</li>
+ *   <li>Use {@link #extractFromFile(String)} to parse a file from the test resources.</li>
+ * </ul>
  */
 public class TikaDocParserTest extends DocParserTestCase {
     private static final Logger logger = LogManager.getLogger();

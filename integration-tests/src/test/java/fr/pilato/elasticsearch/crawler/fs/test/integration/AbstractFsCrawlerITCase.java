@@ -40,6 +40,13 @@ import static fr.pilato.elasticsearch.crawler.fs.framework.TimeValue.MAX_WAIT_FO
 public abstract class AbstractFsCrawlerITCase extends AbstractITCase {
     private static final Logger logger = LogManager.getLogger();
 
+    /**
+     * Prepares the test environment before each test execution.
+     * <p>
+     * It ensures a clean state by removing any existing indices and templates that might
+     * interfere with the current test. It uses the crawler name (unique per test class usually)
+     * to scope the cleanup.
+     */
     @Before
     public void cleanExistingIndex() throws IOException, ElasticsearchClientException {
         logger.debug(" -> Removing existing index [{}*]", getCrawlerName());
@@ -55,6 +62,11 @@ public abstract class AbstractFsCrawlerITCase extends AbstractITCase {
         logger.info("🎬 Starting test [{}] with [{}] as the crawler name", getCurrentTestName(), getCrawlerName());
     }
 
+    /**
+     * Cleans up the test environment after each test execution.
+     * <p>
+     * Unless `TEST_KEEP_DATA` is set (useful for debugging), it deletes the indices and templates created during the test.
+     */
     @After
     public void cleanUp() throws ElasticsearchClientException {
         if (!TEST_KEEP_DATA) {
@@ -97,6 +109,9 @@ public abstract class AbstractFsCrawlerITCase extends AbstractITCase {
         }
     }
 
+    /**
+     * Ensures that the crawler instance is properly closed after each test.
+     */
     @After
     public void shutdownCrawler() throws InterruptedException, IOException {
         if (crawler != null) {
