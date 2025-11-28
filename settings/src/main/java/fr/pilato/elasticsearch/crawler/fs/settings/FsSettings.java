@@ -21,6 +21,20 @@ package fr.pilato.elasticsearch.crawler.fs.settings;
 
 import java.util.Objects;
 
+/**
+ * Main Configuration object for the crawler.
+ * <p>
+ * This object holds all the settings required to run the crawler, including:
+ * <ul>
+ *     <li>{@link Fs}: File system settings (path, includes, excludes, etc.).</li>
+ *     <li>{@link Elasticsearch}: Elasticsearch connection settings (URL, index name, credentials).</li>
+ *     <li>{@link Server}: Remote server settings (SSH/FTP credentials and configuration).</li>
+ *     <li>{@link Rest}: REST API settings.</li>
+ *     <li>{@link Tags}: Custom tags to add to indexed documents.</li>
+ * </ul>
+ * <p>
+ * These settings are typically loaded from a YAML or JSON file.
+ */
 @SuppressWarnings("SameParameterValue")
 public class FsSettings {
 

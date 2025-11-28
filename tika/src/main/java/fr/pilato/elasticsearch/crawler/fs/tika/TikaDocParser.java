@@ -51,7 +51,17 @@ import static fr.pilato.elasticsearch.crawler.fs.tika.TikaInstance.extractText;
 import static fr.pilato.elasticsearch.crawler.fs.tika.TikaInstance.langDetector;
 
 /**
- * Parse a binary document and generate a FSCrawler Doc
+ * Parses binary documents using Apache Tika and generates a FSCrawler {@link Doc}.
+ * <p>
+ * This class serves as the bridge between raw file content and the structured {@link Doc} object
+ * used by FSCrawler. It handles:
+ * <ul>
+ *     <li>Text extraction from various file formats (PDF, DOC, etc.).</li>
+ *     <li>Metadata extraction (author, title, creation date, etc.).</li>
+ *     <li>Language detection.</li>
+ *     <li>Checksum calculation.</li>
+ *     <li>OCR (Optical Character Recognition) integration via Tika.</li>
+ * </ul>
  */
 public class TikaDocParser {
 
@@ -69,6 +79,18 @@ public class TikaDocParser {
         }
     }
 
+    /**
+     * Generates a {@link Doc} object from an input stream.
+     * <p>
+     * This method reads the input stream, extracts text and metadata using Tika,
+     * and populates the provided {@link Doc} object.
+     *
+     * @param fsSettings The crawler settings.
+     * @param inputStream The input stream of the file to parse.
+     * @param doc The {@link Doc} object to populate.
+     * @param filesize The size of the file in bytes.
+     * @throws IOException if an I/O error occurs during parsing.
+     */
     public static void generate(FsSettings fsSettings, InputStream inputStream, Doc doc, long filesize) throws IOException {
         logger.trace("Generating document [{}]", doc.getPath().getReal());
         // Extracting content with Tika

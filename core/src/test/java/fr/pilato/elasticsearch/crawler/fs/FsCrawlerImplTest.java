@@ -25,9 +25,24 @@ import fr.pilato.elasticsearch.crawler.fs.test.framework.AbstractFSCrawlerTestCa
 import org.junit.Test;
 
 import static fr.pilato.elasticsearch.crawler.fs.FsCrawlerImpl.LOOP_INFINITE;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 
+/**
+ * Unit tests for FsCrawlerImpl.
+ * <p>
+ * This class currently covers some edge cases in configuration validation
+ * that trigger exceptions during FsCrawlerImpl instantiation.
+ * <p>
+ * Most of the functional testing is done in the integration-tests module.
+ * New developers should look at {@link fr.pilato.elasticsearch.crawler.fs.test.integration.elasticsearch.FsCrawlerImplAllDocumentsIT}
+ * to understand how the crawler is tested end-to-end.
+ */
 public class FsCrawlerImplTest extends AbstractFSCrawlerTestCase {
+
+    /**
+     * Verifies that the crawler cannot be instantiated with an invalid checksum algorithm.
+     */
     @SuppressWarnings("resource")
     @Test
     public void checksum_non_existing_algorithm() {
@@ -38,6 +53,8 @@ public class FsCrawlerImplTest extends AbstractFSCrawlerTestCase {
 
     /**
      * Test case for issue #185: <a href="https://github.com/dadoonet/fscrawler/issues/185">https://github.com/dadoonet/fscrawler/issues/185</a> : Add xml_support setting
+     * <p>
+     * Verifies that the crawler cannot be instantiated with both XML and JSON support enabled simultaneously.
      */
     @SuppressWarnings("resource")
     @Test
@@ -46,5 +63,24 @@ public class FsCrawlerImplTest extends AbstractFSCrawlerTestCase {
         fsSettings.getFs().setXmlSupport(true);
         fsSettings.getFs().setJsonSupport(true);
         assertThatExceptionOfType(RuntimeException.class).isThrownBy(() -> new FsCrawlerImpl(rootTmpDir, fsSettings, LOOP_INFINITE, false));
+    }
+
+    /**
+     * Verifies that the crawler can be successfully instantiated with valid settings.
+     */
+    @Test
+    public void can_instantiate_with_valid_settings() {
+        FsSettings fsSettings = FsSettingsLoader.load();
+        fsSettings.setName("test-instantiation");
+
+        // We can instantiate it. It creates directories and initializes services.
+        // We use try-with-resources to ensure it is closed properly.
+        try (FsCrawlerImpl crawler = new FsCrawlerImpl(rootTmpDir, fsSettings, LOOP_INFINITE, false)) {
+            assertThat(crawler).isNotNull();
+            assertThat(crawler.getManagementService()).isNotNull();
+            assertThat(crawler.getDocumentService()).isNotNull();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -46,6 +46,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assumptions.assumeThat;
 import static org.assertj.core.api.Assumptions.assumeThatCode;
 
+/**
+ * Tests for Tika extraction logic.
+ * <p>
+ * This class verifies that documents are correctly parsed by Apache Tika and that
+ * the {@link Doc} object is correctly populated with content and metadata.
+ * <p>
+ * These tests do NOT involve Elasticsearch. They are focused on the "Transform" part of the crawler.
+ * Test documents are located in the {@code test-documents} module.
+ */
 public class TikaDocParserTest extends DocParserTestCase {
     private static final Logger logger = LogManager.getLogger();
     private static boolean isOcrAvailable;

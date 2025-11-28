@@ -22,7 +22,17 @@ package fr.pilato.elasticsearch.crawler.fs.beans;
 import java.util.Map;
 
 /**
- * Represents a document we indexed
+ * Represents the document model that FSCrawler indexes into Elasticsearch.
+ * <p>
+ * This object contains all the information extracted from a file, including:
+ * <ul>
+ *     <li>{@link #content}: The text extracted from the file.</li>
+ *     <li>{@link #file}: File system attributes (filename, size, path, etc.).</li>
+ *     <li>{@link #meta}: Metadata extracted from the file content (author, title, keywords, etc.).</li>
+ *     <li>{@link #path}: Physical and virtual paths of the file.</li>
+ *     <li>{@link #attributes}: File owner and group attributes.</li>
+ *     <li>{@link #attachment}: The base64 encoded content (if configured to store source).</li>
+ * </ul>
  */
 public class Doc {
 

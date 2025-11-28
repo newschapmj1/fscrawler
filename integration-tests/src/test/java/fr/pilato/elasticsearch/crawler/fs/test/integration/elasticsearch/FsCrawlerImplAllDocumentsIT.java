@@ -51,7 +51,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assumptions.assumeThat;
 
 /**
- * Test all type of documents we have
+ * End-to-end integration tests for all supported document types.
+ * <p>
+ * This class performs the following steps:
+ * <ol>
+ *     <li>Starts a local Elasticsearch instance (managed by the test framework).</li>
+ *     <li>Copies test documents to a temporary directory.</li>
+ *     <li>Configures and starts an instance of {@link FsCrawlerImpl} pointing to that directory.</li>
+ *     <li>Waits for the documents to be indexed in Elasticsearch.</li>
+ *     <li>Executes search queries to verify that:
+ *         <ul>
+ *             <li>Documents are indexed.</li>
+ *             <li>Content is extracted correctly.</li>
+ *             <li>Metadata (filename, date, etc.) is correct.</li>
+ *         </ul>
+ *     </li>
+ * </ol>
+ * This is the most comprehensive test for checking that the crawler works as expected with real files.
  */
 @TimeoutSuite(millis = 10 * TIMEOUT_MINUTE_AS_MS)
 @Timeout(millis = 10 * TIMEOUT_MINUTE_AS_MS)
