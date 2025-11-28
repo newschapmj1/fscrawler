@@ -36,6 +36,18 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
+ * Main entry point for the FSCrawler application.
+ * <p>
+ * This class orchestrates the crawling process. It is responsible for:
+ * <ul>
+ *     <li>Initializing the settings and validator.</li>
+ *     <li>Setting up the management service (Elasticsearch connection).</li>
+ *     <li>Setting up the document service (Document indexing).</li>
+ *     <li>Instantiating the appropriate file system parser (Local, SSH, FTP).</li>
+ *     <li>Starting the crawler loop or watcher.</li>
+ *     <li>Handling shutdown and resource cleanup.</li>
+ * </ul>
+ *
  * @author dadoonet (David Pilato)
  */
 public class FsCrawlerImpl implements AutoCloseable {
@@ -57,6 +69,15 @@ public class FsCrawlerImpl implements AutoCloseable {
     private final FsParser fsParser;
     private final Thread fsCrawlerThread;
 
+    /**
+     * Constructs a new FsCrawlerImpl instance.
+     *
+     * @param config   The configuration directory path.
+     * @param settings The settings object containing crawler configuration.
+     * @param loop     The number of loops to run (0 for no loop, -1 for infinite/watcher).
+     * @param rest     Whether the REST interface is enabled.
+     * @throws RuntimeException if settings are invalid or if directories cannot be created.
+     */
     public FsCrawlerImpl(Path config, FsSettings settings, Integer loop, boolean rest) {
         FsCrawlerUtil.createDirIfMissing(config);
 
@@ -113,6 +134,14 @@ public class FsCrawlerImpl implements AutoCloseable {
         return managementService;
     }
 
+    /**
+     * Starts the crawler.
+     * <p>
+     * This method initializes the Elasticsearch connection, creates the index schema if necessary,
+     * and starts the crawling thread.
+     *
+     * @throws Exception if startup fails (e.g., cannot connect to Elasticsearch).
+     */
     public void start() throws Exception {
         if (loop == 0 && !rest) {
             logger.warn("Number of runs is set to 0 and rest layer has not been started. Exiting");
@@ -134,6 +163,14 @@ public class FsCrawlerImpl implements AutoCloseable {
         fsParser.closed = false;
     }
 
+    /**
+     * Closes the crawler and releases resources.
+     * <p>
+     * This stops the crawling thread and closes connections to Elasticsearch.
+     *
+     * @throws InterruptedException if the thread is interrupted while waiting for the crawler to stop.
+     * @throws IOException          if an I/O error occurs during closure.
+     */
     @Override
     public void close() throws InterruptedException, IOException {
         logger.debug("Closing FS crawler [{}]", settings.getName());
