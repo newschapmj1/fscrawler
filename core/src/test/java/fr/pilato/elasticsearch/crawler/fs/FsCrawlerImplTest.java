@@ -34,6 +34,12 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOf
  * This class currently covers some edge cases in configuration validation
  * that trigger exceptions during FsCrawlerImpl instantiation.
  * <p>
+ * <strong>Note for new developers:</strong>
+ * This project heavily relies on integration tests (located in the {@code integration-tests} module)
+ * to verify the crawler's behavior against a real Elasticsearch instance.
+ * Unit tests like this one are used for fast validation of internal logic, configuration parsing,
+ * and error handling that doesn't require a running Elasticsearch cluster.
+ * <p>
  * Most of the functional testing is done in the integration-tests module.
  * New developers should look at {@link fr.pilato.elasticsearch.crawler.fs.test.integration.elasticsearch.FsCrawlerImplAllDocumentsIT}
  * to understand how the crawler is tested end-to-end.
@@ -46,8 +52,11 @@ public class FsCrawlerImplTest extends AbstractFSCrawlerTestCase {
     @SuppressWarnings("resource")
     @Test
     public void checksum_non_existing_algorithm() {
+        // Load default settings and modify them for the test case
         FsSettings fsSettings = FsSettingsLoader.load();
         fsSettings.getFs().setChecksum("FSCRAWLER");
+
+        // Assert that the constructor throws the expected exception
         assertThatExceptionOfType(RuntimeException.class).isThrownBy(() -> new FsCrawlerImpl(rootTmpDir, fsSettings, LOOP_INFINITE, false));
     }
 
